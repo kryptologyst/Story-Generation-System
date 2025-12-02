@@ -1,0 +1,62 @@
+model:
+  name: "gpt2-medium"
+  max_length: 512
+  temperature: 1.0
+  top_k: 50
+  top_p: 0.95
+  repetition_penalty: 1.0
+  no_repeat_ngram_size: 2
+  do_sample: true
+
+data:
+  data_path: "data/stories.jsonl"
+  max_length: 512
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  batch_size: 4
+  num_workers: 4
+
+training:
+  learning_rate: 3e-5
+  num_epochs: 5
+  warmup_steps: 200
+  weight_decay: 0.01
+  gradient_accumulation_steps: 2
+  max_grad_norm: 1.0
+  save_steps: 1000
+  eval_steps: 1000
+  logging_steps: 100
+  output_dir: "./outputs/trained_model"
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  greater_is_better: false
+
+evaluation:
+  num_samples: 200
+  metrics:
+    - "perplexity"
+    - "bleu"
+    - "rouge"
+    - "bert_score"
+    - "diversity"
+    - "coherence"
+  batch_size: 4
+
+generation:
+  max_length: 300
+  temperature: 0.8
+  top_k: 40
+  top_p: 0.9
+  repetition_penalty: 1.1
+  no_repeat_ngram_size: 3
+  num_return_sequences: 1
+  do_sample: true
+
+system:
+  seed: 42
+  device: null
+  mixed_precision: true
+  num_gpus: 1
+  log_level: "INFO"
